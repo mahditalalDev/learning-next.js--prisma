@@ -35,6 +35,7 @@
   font-size: 20px;
   font-weight: 600;
   margin: 0 12px;
+  text-transform: capitalize;
 }
 .link:hover {
   color: rgb(6, 59, 207);
@@ -47,10 +48,10 @@
 }
 .btn {
   cursor: pointer;
-  background-color: rgba(36, 36, 189, 0.863);
+  background-color: rgba(46, 46, 141, 0.863);
   color: white;
   border-radius: 10px;
-  padding: 5px 10px;
+  padding: 8px 16px;
   font-size: 21px;
   font-weight: 600;
   display: flex;
@@ -59,4 +60,48 @@
 .btn:hover {
   transition: 0.3s;
   background-color: darkblue;
+}
+.menu {
+  font-size: 40px;
+  font-weight: bold;
+  color: #202122;
+  cursor: pointer;
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .menu {
+    display: block;
+  }
+  .logo {
+    display: none;
+  }
+  .navLinksWrapper {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    background-color: inherit;
+    transition: all 0.2s ease-in;
+    z-index: 100;
+    background-color: rgb(227, 225, 225);
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    border-bottom: 2px solid rgb(144, 144, 144);
+  }
+  .navLinks {
+    padding-left: 30px;
+    padding-bottom: 10px;
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+}
+.iconClose:hover {
+  rotate: 180deg;
+  color: red;
+  transition: 0.5s;
+  scale: 1.2;
 }
