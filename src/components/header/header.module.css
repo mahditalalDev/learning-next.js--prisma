@@ -1,0 +1,62 @@
+/*=============================
+ TABLE CONTENT
+ 1.header design
+ 
+
+
+=================================*/
+
+.header {
+  display: flex;
+  height: 100px;
+  padding: 0 40px;
+  border-bottom: 4px solid rgb(144, 144, 144);
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(227, 225, 225);
+  position: relative;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: rgb(176, 15, 176);
+}
+.navLinks {
+  margin-left: 30px;
+}
+.link {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 12px;
+}
+.link:hover {
+  color: rgb(6, 59, 207);
+  transition: 0.2s;
+}
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.btn {
+  cursor: pointer;
+  background-color: rgba(36, 36, 189, 0.863);
+  color: white;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 21px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+.btn:hover {
+  transition: 0.3s;
+  background-color: darkblue;
+}
