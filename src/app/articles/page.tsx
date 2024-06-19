@@ -3,9 +3,9 @@ import ArticleItem from "@/components/articles/ArticleItem";
 import { Article } from '@/utils/types'
 
 const ArticlesPage = async () => {
-  const response = await fetch('https://jsonplaceholder.typicode.com/postsss');
-  if (response.ok) {
-    throw new Error("failed to fetch data")
+  const response = await fetch('https://jsonplaceholder.typicode.com/postss');
+  if (!response.ok) {
+    throw new Error("failed to fetch")
   }
   const posts: Article[] = await response.json();
   let postsList = posts.map((p) => {
