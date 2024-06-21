@@ -12,7 +12,7 @@ const Hero = () => {
                 <p className={styles.desc} >the best hosting solution for your online success</p>
 
                 <div className={styles.services} >
-                    <div className={styles.e} >
+                    <div className={styles.serviceItem} >
                         <TiTick /> Easy to use Control Panel
                     </div>
                     <div className={styles.serviceItem} >
