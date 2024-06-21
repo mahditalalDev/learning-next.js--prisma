@@ -3,10 +3,14 @@ import SearchArticleInput from "@/components/articles/SearchArticleInput";
 
 import { Article } from '@/utils/types'
 import Pagination from "./Pagination";
+import { resolve } from "path";
 
 
 
 const ArticlesPage = async () => {
+  await new Promise((resolve) => {
+    setTimeout(resolve, 3000)
+  })
   const response = await fetch('https://jsonplaceholder.typicode.com/posts');
   if (!response.ok) {
     throw new Error("failed to fetch")
@@ -16,17 +20,15 @@ const ArticlesPage = async () => {
     return (<ArticleItem article={p} key={p.id} />)
   })
 
-  return <section className="container m-auto px-5  ">
-    <SearchArticleInput />
-    <div className="flex items-center justify-center gap-7 flex-wrap" >
-      {postsList}
-
-    </div>
-    <Pagination/>
-
-
-
-  </section>;
+  return (
+    <section className="container m-auto px-5  ">
+      <SearchArticleInput />
+      <div className="flex items-center justify-center gap-7 flex-wrap" >
+        {postsList}
+      </div>
+      <Pagination />
+    </section>
+  );
 };
 
 export default ArticlesPage;
