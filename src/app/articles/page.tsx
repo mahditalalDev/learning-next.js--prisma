@@ -2,7 +2,8 @@ import ArticleItem from "@/components/articles/ArticleItem";
 import SearchArticleInput from "@/components/articles/SearchArticleInput";
 
 import { Article } from '@/utils/types'
-import Pagination from "./pagination";
+import Pagination from "./Pagination";
+
 
 
 const ArticlesPage = async () => {
@@ -21,7 +22,7 @@ const ArticlesPage = async () => {
       {postsList}
 
     </div>
-    <Pagination />
+    <Pagination/>
 
 
 
