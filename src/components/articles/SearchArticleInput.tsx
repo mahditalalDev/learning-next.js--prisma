@@ -1,13 +1,17 @@
 'use client'
+import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { toast } from "react-toastify"
+
 
 
 const SearchArticleInput = () => {
     const [searchText, setSearchText] = useState("")
-
+    const router = useRouter();
     const formSubmitHandler = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(searchText);
+        if (searchText === '') { return toast.error("please enter something") }
+        router.push(`/articles/search?title=${searchText}`)
     }
 
     return (
