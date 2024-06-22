@@ -1,6 +1,17 @@
 import { z } from 'zod';
 
 export const createArticleSchema = z.object({
-  title: z.string().min(2, 'title most be more than 2 chracter').max(200),
-  body: z.string().min(10),
+  title: z
+    .string({
+      required_error: 'title is reguried',
+      invalid_type_error: 'title should be with type string',
+    })
+    .min(2, 'title most be more than 2 chracter')
+    .max(200),
+  description: z
+    .string({
+      required_error: 'description is reguried',
+      invalid_type_error: 'description should be with type string',
+    })
+    .min(10, { message: 'description should be at min 10 character' }),
 });

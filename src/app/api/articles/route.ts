@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { articles } from '@/utils/data';
-import { Article } from '@/utils/types';
 import { createArticleSchema } from '@/utils/validationSchema';
 import { NewArticleDto } from '@/utils/dtos';
+import { Article } from '@prisma/client';
+import prisma from '@/utils/db';
 
 /**
  * @method GET
@@ -11,8 +11,14 @@ import { NewArticleDto } from '@/utils/dtos';
  * @access public
  */
 
-export function GET(reg: NextRequest) {
-  return NextResponse.json(articles, { status: 200 });
+export async function GET(reg: NextRequest) {
+  try {
+    const articles = await prisma.article.findMany();
+
+    return NextResponse.json(articles, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: 'server error' }, { status: 500 });
+  }
 }
 
 /**
@@ -23,22 +29,23 @@ export function GET(reg: NextRequest) {
  */
 
 export async function POST(reg: NextRequest) {
-  const body = (await reg.json()) as NewArticleDto;
+  try {
+    const body = (await reg.json()) as NewArticleDto;
 
-  const validation = createArticleSchema.safeParse(body);
-  if (!validation.success) {
-    return NextResponse.json(
-      { message: validation.error.errors[0].message },
-      { status: 400 },
-    );
+    const validation = createArticleSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: validation.error.errors[0].message },
+        { status: 400 },
+      );
+    }
+
+    const newArticle: Article = await prisma.article.create({
+      data: { title: body.title, description: body.description },
+    });
+
+    return NextResponse.json(newArticle, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ message: 'server error' }, { status: 500 });
   }
-
-  const newArticle: Article = {
-    title: body.title,
-    body: body.body,
-    id: articles.length + 1,
-    userId: 200,
-  };
-  articles.push(newArticle);
-  return NextResponse.json(newArticle, { status: 201 });
 }
