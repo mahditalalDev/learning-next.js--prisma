@@ -20,14 +20,9 @@ export async function DELETE(reg: NextRequest, { params }: props) {
     if (!user) {
       return NextResponse.json({ message: 'user not found' }, { status: 404 });
     }
+    const jwtToken = reg.cookies.get('JwtToken');
+    const authToken = jwtToken?.value as string;
 
-    const authToken = reg.headers.get('authToken') as string;
-    if (!authToken) {
-      return NextResponse.json(
-        { message: 'not token provided,access denied' },
-        { status: 401 },
-      );
-    }
     const userFromToken = jwt.verify(
       authToken,
       process.env.JWT_SECRET as string,

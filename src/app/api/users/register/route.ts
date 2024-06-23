@@ -3,7 +3,7 @@ import prisma from '@/utils/db';
 import { RegisterUserTdo } from '@/utils/dtos';
 import { registerUserSchema } from '@/utils/validationSchema';
 import bcrypt from 'bcryptjs';
-import { generateJWT } from '@/utils/generateToken';
+import { generateJWT, setCookie } from '@/utils/generateToken';
 import { JWTPayloadType } from '@/utils/types';
 
 /**
@@ -49,13 +49,17 @@ export async function POST(req: NextRequest) {
       },
     });
     //Todo generate token
-    const jwtPayload: JWTPayloadType = {
+    const cookie = setCookie({
       id: newUser.id,
       isAdmin: newUser.isAdmin,
       username: newUser.username,
-    };
-    const token = generateJWT(jwtPayload);
-    return NextResponse.json({ ...newUser, token }, { status: 201 });
+    });
+    // const token = generateJWT(jwtPayload);
+
+    return NextResponse.json(
+      { ...newUser, message: 'register and authemticated' },
+      { status: 201, headers: { 'Set-Cookie': cookie } },
+    );
   } catch (error) {
     return NextResponse.json({ message: 'server error' }, { status: 500 });
   }

@@ -3,9 +3,7 @@ import prisma from '@/utils/db';
 import { LoginUserTdo } from '@/utils/dtos';
 import { loginUserSchema } from '@/utils/validationSchema';
 import bcrypt from 'bcryptjs';
-import { JWTPayloadType } from '@/utils/types';
-
-import { generateJWT } from '@/utils/generateToken';
+import { setCookie } from '@/utils/generateToken';
 /**
  * @method POST
  * @route ~/api/users/login
@@ -37,16 +35,14 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
-    const jwtPayload: JWTPayloadType = {
+    const cookie = setCookie({
       id: user.id,
       username: user.username,
       isAdmin: user.isAdmin,
-    };
-
-    const token = generateJWT(jwtPayload);
+    });
     return NextResponse.json(
-      { message: 'authinticated', token },
-      { status: 200 },
+      { message: 'authinticated' },
+      { status: 200, headers: { 'Set-Cookie': cookie } },
     );
   } catch (error) {
     return NextResponse.json({ message: 'server error' }, { status: 500 });

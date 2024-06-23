@@ -2,7 +2,7 @@ import Hero from "@/components/home/Hero";
 import WebHostingPlan from "@/components/home/WebHostingPlan";
 
 const HomePage = () => {
-  console.log('hello from the server');
+ 
   return (
     <section>
       <Hero />
