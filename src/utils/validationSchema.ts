@@ -15,3 +15,8 @@ export const createArticleSchema = z.object({
     })
     .min(10, { message: 'description should be at min 10 character' }),
 });
+export const registerUserSchema = z.object({
+  username: z.string().min(5).max(15),
+  email: z.string().email(),
+  password: z.string().min(5),
+});
