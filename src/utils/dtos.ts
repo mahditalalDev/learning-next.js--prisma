@@ -11,3 +11,7 @@ export interface RegisterUserTdo {
   email: string;
   password: string;
 }
+export interface LoginUserTdo {
+  email: string;
+  password: string;
+}

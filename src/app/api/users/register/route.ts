@@ -3,6 +3,8 @@ import prisma from '@/utils/db';
 import { RegisterUserTdo } from '@/utils/dtos';
 import { registerUserSchema } from '@/utils/validationSchema';
 import bcrypt from 'bcryptjs';
+import { generateJWT } from '@/utils/generateToken';
+import { JWTPayloadType } from '@/utils/types';
 
 /**
  * @method POST
@@ -47,8 +49,13 @@ export async function POST(req: NextRequest) {
       },
     });
     //Todo generate token
-    const token = null;
-    return NextResponse.json({...newUser,token}, { status: 201 });
+    const jwtPayload: JWTPayloadType = {
+      id: newUser.id,
+      isAdmin: newUser.isAdmin,
+      username: newUser.username,
+    };
+    const token = generateJWT(jwtPayload);
+    return NextResponse.json({ ...newUser, token }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: 'server error' }, { status: 500 });
   }
