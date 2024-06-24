@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/utils/db';
 import jwt from 'jsonwebtoken';
 import { JWTPayloadType } from '@/utils/types';
+import { verifyToken } from '@/utils/verifyToken';
 
 interface props {
   params: { id: string };
@@ -12,7 +13,7 @@ interface props {
  * @description delete user account
  * @access private
  */
-export async function DELETE(reg: NextRequest, { params }: props) {
+export async function DELETE(request: NextRequest, { params }: props) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: parseInt(params.id) },
@@ -20,14 +21,9 @@ export async function DELETE(reg: NextRequest, { params }: props) {
     if (!user) {
       return NextResponse.json({ message: 'user not found' }, { status: 404 });
     }
-    const jwtToken = reg.cookies.get('JwtToken');
-    const authToken = jwtToken?.value as string;
+    const userFromToken = verifyToken(request);
 
-    const userFromToken = jwt.verify(
-      authToken,
-      process.env.JWT_SECRET as string,
-    ) as JWTPayloadType;
-    if (userFromToken === null || userFromToken === undefined) {
+    if (userFromToken === null) {
       return NextResponse.json(
         { message: 'not token provided,access denied' },
         { status: 401 },
