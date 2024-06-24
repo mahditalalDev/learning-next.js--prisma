@@ -19,6 +19,14 @@ export async function GET(reg: NextRequest, props: SingleArticleParam) {
   try {
     const article = await prisma.article.findUnique({
       where: { id: parseInt(props.params.id) },
+      include: {
+        comment: {
+          include: { user: { select: { username: true } } },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
     });
     if (!article) {
       return NextResponse.json(
