@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UpdateArticleDto } from '@/utils/dtos';
 import prisma from '@/utils/db';
+import { verifyToken } from '@/utils/verifyToken';
+import { request } from 'http';
 
 interface SingleArticleParam {
   params: { id: string };
@@ -33,11 +35,18 @@ export async function GET(reg: NextRequest, props: SingleArticleParam) {
  * @method PUT
  * @route ~/api/articles/:id
  * @description update single article
- * @access public
+ * @access private only admin can update article
  */
 
-export async function PUT(reg: NextRequest, props: SingleArticleParam) {
+export async function PUT(request: NextRequest, props: SingleArticleParam) {
   try {
+    const userFromToken = verifyToken(request);
+    if (userFromToken === null || userFromToken.isAdmin === false) {
+      return NextResponse.json(
+        { message: 'only admin can update the article' },
+        { status: 403 },
+      );
+    }
     const article = await prisma.article.findUnique({
       where: { id: parseInt(props.params.id) },
     });
@@ -47,7 +56,7 @@ export async function PUT(reg: NextRequest, props: SingleArticleParam) {
         { status: 404 },
       );
     }
-    const body = (await reg.json()) as UpdateArticleDto;
+    const body = (await request.json()) as UpdateArticleDto;
     const updateArticle = await prisma.article.update({
       where: {
         id: parseInt(props.params.id),
@@ -67,11 +76,19 @@ export async function PUT(reg: NextRequest, props: SingleArticleParam) {
  * @method DELETE
  * @route ~/api/articles/:id
  * @description delete single article
- * @access public
+ * @access private only admin can delete the single article
  */
 
-export async function DELETE(reg: NextRequest, props: SingleArticleParam) {
+export async function DELETE(request: NextRequest, props: SingleArticleParam) {
   try {
+    const userFromToken = verifyToken(request);
+    if (userFromToken === null || userFromToken.isAdmin === false) {
+      return NextResponse.json(
+        { message: 'only admin can delete the article' },
+        { status: 403 },
+      );
+    }
+
     const article = await prisma.article.findUnique({
       where: { id: parseInt(props.params.id) },
     });

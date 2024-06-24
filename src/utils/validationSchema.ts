@@ -24,3 +24,10 @@ export const loginUserSchema = z.object({
   email: z.string().email(),
   password: z.string().min(5),
 });
+export const createCommentSchema = z.object({
+  text: z.string().min(5).max(500),
+  articleId: z.number(),
+});
+export const updateCommentSchema=z.object({
+  text: z.string().min(5).max(500),
+})
