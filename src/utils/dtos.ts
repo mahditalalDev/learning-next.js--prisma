@@ -15,3 +15,8 @@ export interface LoginUserTdo {
   email: string;
   password: string;
 }
+export interface UpdateProfileTdo {
+  username?: string;
+  email?: string;
+  password?: string;
+}
