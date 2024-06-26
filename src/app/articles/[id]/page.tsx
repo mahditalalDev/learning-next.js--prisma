@@ -17,7 +17,7 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
             <div className="bg-white p-7 rounded-lg mb-7"  >
                 <h1 className="text-3xl text-gray-700 font-bold mb-2" >{responeData.title}</h1>
                 <div className="text-gray-400" >1/1/2020</div>
-                <p className=" text-gray-800 text-xl mt-5 " >{responeData.body}</p>
+                <p className=" text-gray-800 text-xl mt-5 " >{responeData.description}</p>
 
             </div>
             <AddCommentForm />
