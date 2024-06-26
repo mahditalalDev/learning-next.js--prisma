@@ -1,32 +1,37 @@
 import ArticleItem from "@/components/articles/ArticleItem";
 import SearchArticleInput from "@/components/articles/SearchArticleInput";
-
-import { Article } from '@/utils/types'
+import { getArticles } from "@/apiCalls/articleApiCall";
 import Pagination from "./Pagination";
-import { resolve } from "path";
+import { getArticlesCount } from "@/apiCalls/articleApiCall";
+
+interface ArticlePageProps {
+  searchParams: { pageNumber: string }
+}
 
 
 
-const ArticlesPage = async () => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 3000)
+const ArticlesPage = async ({ searchParams }: ArticlePageProps) => {
+  // await new Promise((resolve) => {
+  //   setTimeout(resolve, 3000)
+  // })
+  const count: number = await getArticlesCount()
+  const { pageNumber } = searchParams;
+  const articles = await getArticles(pageNumber);
+  const pages = Math.ceil(count / 6);
+  const postsList = articles.map((p) => {
+    return <ArticleItem key={p.id} article={p} />
   })
-  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-  if (!response.ok) {
-    throw new Error("failed to fetch")
-  }
-  const posts: Article[] = await response.json();
-  let postsList = posts.slice(0, 6).map((p) => {
-    return (<ArticleItem article={p} key={p.id} />)
-  })
+
+
+
 
   return (
-    <section className="container m-auto px-5  ">
+    <section className="fix-height container m-auto px-5  ">
       <SearchArticleInput />
       <div className="flex items-center justify-center gap-7 flex-wrap" >
         {postsList}
       </div>
-      <Pagination />
+      <Pagination pageNumber={parseInt(pageNumber)} route="/articles/" pages={pages} />
     </section>
   );
 };

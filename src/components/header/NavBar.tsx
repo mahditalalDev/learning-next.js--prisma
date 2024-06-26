@@ -44,7 +44,7 @@ const NavBar = () => {
               setToggle(false);
             }}
             className={styles.link}
-            href="/articles"
+            href="/articles?pageNumber=1"
           >
             Articles
           </Link>

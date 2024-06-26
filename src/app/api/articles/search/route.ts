@@ -9,7 +9,7 @@ import prisma from '@/utils/db';
  */
 export async function GET(req: NextRequest) {
   try {
-    const searchText = req.nextUrl.searchParams.get('title');
+    const searchText = req.nextUrl.searchParams.get('pageNumber');
     let articles;
     if (searchText) {
       articles = await prisma.article.findMany({
