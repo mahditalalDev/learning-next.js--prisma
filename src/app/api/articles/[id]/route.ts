@@ -12,7 +12,7 @@ interface SingleArticleParam {
  * @method GET
  * @route ~/api/articles/:id
  * @description get single article
- * @access public
+ * @access public anyone can view details of single article
  */
 
 export async function GET(reg: NextRequest, props: SingleArticleParam) {
