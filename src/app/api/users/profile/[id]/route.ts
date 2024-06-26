@@ -10,13 +10,14 @@ interface props {
 /**
  * @method DELETE
  * @route ~/api/users/profile/:id
- * @description delete user account
+ * @description delete user account and admin can delete the user account
  * @access private
  */
 export async function DELETE(request: NextRequest, { params }: props) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: parseInt(params.id) },
+      include: { comments: true },
     });
     if (!user) {
       return NextResponse.json({ message: 'user not found' }, { status: 404 });
@@ -29,8 +30,16 @@ export async function DELETE(request: NextRequest, { params }: props) {
         { status: 401 },
       );
     }
-    if (userFromToken.id === user.id) {
+    if (userFromToken.id === user.id || userFromToken.isAdmin === true) {
+      // delte user account
       await prisma.user.delete({ where: { id: parseInt(params.id) } });
+      // delete all comments by this user
+      const commentsIds = user.comments.map((comment) => comment.id);
+      await prisma.comment.deleteMany({
+        where: {
+          id: { in: commentsIds },
+        },
+      });
       return NextResponse.json(
         { message: 'your profile account has been deleted' },
         { status: 200 },

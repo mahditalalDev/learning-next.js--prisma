@@ -99,6 +99,7 @@ export async function DELETE(request: NextRequest, props: SingleArticleParam) {
 
     const article = await prisma.article.findUnique({
       where: { id: parseInt(props.params.id) },
+      include: { comment: true },
     });
     if (!article) {
       return NextResponse.json(
@@ -106,13 +107,24 @@ export async function DELETE(request: NextRequest, props: SingleArticleParam) {
         { status: 404 },
       );
     }
+    // delete the article
     const deleteUser = await prisma.article.delete({
       where: {
         id: parseInt(props.params.id),
       },
     });
+    // todo delete all comments when we delete the article
+
+    const commentsId: number[] = article.comment.map((commentId) => {
+      return commentId.id;
+    });
+    await prisma.comment.deleteMany({
+      where: { id: { in: commentsId } },
+    });
+
     return NextResponse.json(deleteUser, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: 'server error' }, { status: 500 });
   }
 }
