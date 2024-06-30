@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,4 +21,8 @@ body {
 .overflow-height {
   height: calc(100vh - 150px);
   /* border: 1px red solid; */
+}
+button:disabled {
+  cursor: not-allowed;
+  background-color: rgb(185, 184, 184);
 }

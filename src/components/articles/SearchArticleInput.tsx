@@ -12,6 +12,7 @@ const SearchArticleInput = () => {
         e.preventDefault();
         if (searchText === '') { return toast.error("please enter something") }
         router.push(`/articles/search?title=${searchText}`)
+        // api/articles/search?title=value
     }
 
     return (

@@ -13,3 +13,14 @@ export function verifyToken(request: NextRequest): JWTPayloadType | null {
     return null;
   }
 }
+export function verifyTokenForPage(token: string): JWTPayloadType | null {
+  try {
+    const privateKey = process.env.JWT_SECRET as string;
+    const userPayload = jwt.verify(token, privateKey) as JWTPayloadType;
+    if (!userPayload) return null;
+
+    return userPayload;
+  } catch (error) {
+    return null;
+  }
+}

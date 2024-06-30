@@ -1,25 +1,39 @@
 'use client'
 import { useState } from "react"
 import { toast } from 'react-toastify';
+import axios from "axios";
+import { DOMAIN } from "@/utils/contstants";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
 
-    const [userName, setUserName] = useState("")
+    const [username, setUserName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [loading, setLoading] = useState(false);
+    const router = useRouter()
 
-    const formSubmitHandler = (e: React.FormEvent) => {
+    const formSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (userName === "") {
+        if (username === "") {
             return (toast.error("enter your userName"))
         }
-        else if (email === "") {
+        if (email === "") {
             return (toast.error("enter your Email"))
-        } else if (password === "") {
+        } if (password === "") {
             return (toast.error("enter your Password"))
         }
-        else {
-            console.log({ userName, email, password })
+        try {
+            setLoading(true);
+            await axios.post(`${DOMAIN}/api/users/register`, { email, password, username });
+            router.replace("/")
+            setLoading(false)
+            router.refresh();
+        } catch (error: any) {
+            setLoading(false)
+            toast.error(error?.response.data.message)
+            console.log("hello", error)
+
         }
 
     }
@@ -30,7 +44,7 @@ const RegisterForm = () => {
                 className="mb-4 border rounded p-2 text-xl"
                 type="text"
                 placeholder="enter your UserName"
-                value={userName}
+                value={username}
                 onChange={(e) => {
                     setUserName(e.target.value)
                 }}
@@ -54,10 +68,12 @@ const RegisterForm = () => {
                 }}
             />
             <button
+                disabled={loading}
                 className="text-2xl text-white bg-blue-800 p-2 rounded-lg font-bold"
                 type="submit"
             >
-                Register
+                {loading ? 'loading...' : 'Register'}
+
             </button>
         </form>
     )

@@ -23,6 +23,8 @@ export async function getArticlesCount(): Promise<number> {
 
 // get articles by page search
 export async function getArticlesSearch(title: string): Promise<Article[]> {
+  console.log('the title from api calls is ', title);
+
   const response = await fetch(
     `http://localhost:3000/api/articles/search?title=${title}`,
     // /                   api/articles/search?title=value

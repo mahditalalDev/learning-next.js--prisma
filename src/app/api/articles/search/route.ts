@@ -7,10 +7,10 @@ import prisma from '@/utils/db';
  * @description get articles by search
  * @access public
  */
+
 export async function GET(req: NextRequest) {
   try {
     const searchText = req.nextUrl.searchParams.get('title');
-    console.log('helllooooooooooooooo', req.nextUrl.searchParams);
     let articles;
     if (searchText) {
       articles = await prisma.article.findMany({
