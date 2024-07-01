@@ -1,15 +1,31 @@
 'use client'
 import { useState } from "react"
 import { toast } from "react-toastify"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { DOMAIN } from "@/utils/contstants"
 
-
-const AddCommentForm = () => {
+interface AddCommentProps {
+    articleId: number;
+    
+}
+const AddCommentForm = ({ articleId }: AddCommentProps) => {
     const [text, setText] = useState("")
-
-    const formSubmitHandler = (e: React.FormEvent) => {
+    const router = useRouter();
+    
+    const formSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault();
         if (text === "") { return toast.error("please write Something") }
-        console.log(text);
+        try {
+            await axios.post(`${DOMAIN}/api/comments`, { text, articleId })
+            router.refresh()
+            setText("")
+
+        } catch (error: any) {
+            toast.error(error.response.data.message)
+            console.log(error)
+
+        }
     }
 
     return (
