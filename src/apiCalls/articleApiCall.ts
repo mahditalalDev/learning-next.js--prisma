@@ -7,7 +7,7 @@ export async function getArticles(
   pageNumber: string | undefined,
 ): Promise<Article[]> {
   const response = await fetch(
-    `http://localhost:3000/api/articles?pageNumber=${pageNumber}`,
+    `${DOMAIN}/api/articles?pageNumber=${pageNumber}`,
   );
   if (!response.ok) {
     throw new Error('failed to fetch');
@@ -16,7 +16,7 @@ export async function getArticles(
 }
 // get count of all articles
 export async function getArticlesCount(): Promise<number> {
-  const response = await fetch(`http://localhost:3000/api/articles/count`);
+  const response = await fetch(`${DOMAIN}/api/articles/count`);
   if (!response.ok) {
     throw new Error('failed to get articles count');
   }
@@ -29,7 +29,7 @@ export async function getArticlesSearch(title: string): Promise<Article[]> {
   console.log('the title from api calls is ', title);
 
   const response = await fetch(
-    `http://localhost:3000/api/articles/search?title=${title}`,
+    `${DOMAIN}/api/articles/search?title=${title}`,
     // /                   api/articles/search?title=value
   );
   console.log(response);
