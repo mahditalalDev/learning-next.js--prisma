@@ -4,37 +4,143 @@ import AddCommentForm from "@/components/articles/comments/AddCommentForm";
 import CommentItem from "@/components/articles/comments/CommentItem";
 import { SingleArtcile } from "@/utils/types";
 import { Article } from "@prisma/client";
+import { cookies } from "next/headers";
+import { verifyTokenForPage } from "@/utils/verifyToken";
 
+import { redirect } from "next/navigation";
+import prisma from "@/utils/db";
 
 interface SingleArticlePageProps {
-    params: { id: number }
+    params: { id: string }
 }
+
 const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
     
-    
+    const token = cookies().get("JwtToken")?.value || "";
+    const payload = verifyTokenForPage(token);
 
-    const article: SingleArtcile = await getSingleArticle(params.id);
-    console.log(article)
-    // const commentsList = article.comments.map((comment) => {
-    //     return <CommentItem key={comment.id} comment={comment} />
+    //const article: SingleArticle = await getSingleArticle(params.id);
 
+    const article = await prisma.article.findUnique({
+        where: { id: parseInt(params.id) },
+        include: {
+            comment: {
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                        }
+                    }
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            }
+        }
+    }) as SingleArtcile;
 
-    // })
+    if (!article) {
+        redirect("/not-found");
+    }
+
     return (
-        <section className="fix-height container m-auto w-full px-5 pt-8 md:w3/4 ">
-            <div className="bg-white p-7 rounded-lg mb-7"  >
-                <h1 className="text-3xl text-gray-700 font-bold mb-2" >{article.title}</h1>
-                <div className="text-gray-400" >{new Date(article.createdAt).toDateString()}</div>
-                <p className=" text-gray-800 text-xl mt-5 " >{article.description}</p>
-
+        <section className="fix-height container m-auto w-full px-5 pt-8 md:w-3/4">
+            <div className="bg-white p-7 rounded-lg mb-7">
+                <h1 className="text-3xl font-bold text-gray-700 mb-2">
+                    {article.title}
+                </h1>
+                <div className="text-gray-400">
+                    {new Date(article.createdAt).toDateString()}
+                </div>
+                <p className="text-gray-800 text-xl mt-5">{article.description}</p>
             </div>
-            <AddCommentForm articleId={article.id} />
-            <h4 className="text-xl text-gray-800 ps-1 font-semibold mb-2 mt-7">Comments</h4>
-            {article.comment?.map((c) => {
-                return <CommentItem key={c.id} comment={c} />
-            })}
+            <div className="mt-7">
+                {payload ? (
+                    <AddCommentForm articleId={article.id} />
+                ) : (
+                    <p className="text-blue-600 md:text-xl">
+                        to write a comment you should log in first
+                    </p>
+                )}
+            </div>
+            <h4 className="text-xl text-gray-800 ps-1 font-semibold mb-2 mt-7">
+                Comments
+            </h4>
+            {article.comment.map(comment => (
+                <CommentItem key={comment.id} comment={comment} userId={payload?.id} />
+            ))}
         </section>
     )
 }
 
-export default SingleArticlePage
+export default SingleArticlePage;
+
+
+
+/*
+interface SingleArticlePageProps {
+    params: { id: string }
+}
+
+const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
+    const token = cookies().get("jwtToken")?.value || "";
+    const payload = verifyTokenForPage(token);
+
+    //const article: SingleArticle = await getSingleArticle(params.id);
+
+    const article = await prisma.article.findUnique({
+        where: { id: parseInt(params.id) },
+        include: {
+            comments: {
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                        }
+                    }
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            }
+        }
+    }) as SingleArticle;
+
+    if(!article){
+       redirect("/not-found");
+    }
+   
+    return (
+        <section className="fix-height container m-auto w-full px-5 pt-8 md:w-3/4">
+            <div className="bg-white p-7 rounded-lg mb-7">
+                <h1 className="text-3xl font-bold text-gray-700 mb-2">
+                    {article.title}
+                </h1>
+                <div className="text-gray-400">
+                    {new Date(article.createdAt).toDateString()}
+                </div>
+                <p className="text-gray-800 text-xl mt-5">{article.description}</p>
+            </div>
+            <div className="mt-7">
+                {payload ? (
+                    <AddCommentForm articleId={article.id} />
+                ) : (
+                    <p className="text-blue-600 md:text-xl">
+                        to write a comment you should log in first
+                    </p>
+                )}
+            </div>
+            <h4 className="text-xl text-gray-800 ps-1 font-semibold mb-2 mt-7">
+                Comments
+            </h4>
+            {article.comments.map(comment => (
+                <CommentItem key={comment.id} comment={comment} userId={payload?.id} />
+            ))}
+        </section>
+    )
+}
+
+export default SingleArticlePage;
+
+
+*/ 
