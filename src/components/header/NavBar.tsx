@@ -6,8 +6,11 @@ import { useState } from 'react';
 import { IoMenu } from 'react-icons/io5';
 import { IoCloseSharp } from 'react-icons/io5';
 import React from 'react';
+interface NavBarProps {
+  isAdmin: boolean;
+}
 
-const NavBar = () => {
+const NavBar = ({ isAdmin }: NavBarProps) => {
   const [toggle, setToggle] = useState(false);
   return (
     <nav className={styles.nav}>
@@ -57,15 +60,16 @@ const NavBar = () => {
           >
             About
           </Link>
-          <Link
-            onClick={() => {
-              setToggle(false);
-            }}
-            className={styles.link}
-            href="/admin"
-          >
-            admin Dashboard
-          </Link>
+          {isAdmin && (
+            <Link
+              onClick={() => {
+                setToggle(false);
+              }}
+              className={styles.link}
+              href="/admin"
+            >
+              admin Dashboard
+            </Link>)}
         </ul>
       </div>
     </nav>
